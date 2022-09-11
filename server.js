@@ -15,7 +15,8 @@ const app = express();
 
 app.use('/graphql', graphqlHTTP({
     schema: schema,
-    rootValue: root // GraphQL server will resolve any query of desc/price as the root object.
+    rootValue: root, // GraphQL server will resolve any query of desc/price as the root object.
+    graphiql: true
 }))
 
 app.listen(3000, () => {
