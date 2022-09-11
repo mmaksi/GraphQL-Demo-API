@@ -1,15 +1,24 @@
+# Anything related to querying and reading data
 type Query {
-    orders: [Order]
+  products: [Product]
+  productsByPrice(min: Float!, max: Float!): [Product]
+  productById(productId: ID!): Product
+}
+
+# Anything realted to mutating data (adding, updating, deleting)
+type Mutation {
+  addNewProduct(id: ID!, description: String!, price: Float!): Product
+  addNewProductReview(id: ID!, rating: Int!, comment: String): Review
 }
 
 type Product {
-    id: ID!
-    description: String!
-    price: Float!
-    reviews: [Review]
+  id: ID!
+  description: String!
+  price: Float!
+  reviews: [Review]
 }
 
 type Review {
-    rating: Int!
-    comment: String
+  rating: Int!
+  comment: String
 }
