@@ -1,23 +1,78 @@
 const express = require("express");
 const { buildSchema } = require("graphql");
-const { graphqlHTTP } = require("express-graphql")
+const { graphqlHTTP } = require("express-graphql");
 
 const schema = buildSchema(`
     type Query {
-        description: String
-        price: Float
+        products: [Product]
+        orders: [Order]
+    }
+
+    type Product {
+        id: ID!
+        description: String!
+        price: Float!
+        reviews: [Review]
+    }
+
+    type Review {
+        rating: Int!
+        comment: String
+    }
+
+    type Order {
+        date: String!
+        subtotal: Float!
+        items: [OrderItem]
+    }
+
+    type OrderItem {
+        product: Product!
+        quantity: Int!
     }
 `);
 
-const root = { description: 'Red Shoe', price: 42.12 }
+const root = {
+  products: [
+    {
+      id: "redshoe",
+      desription: "Red Shoe",
+      price: 42.12,
+    },
+    {
+      id: "bluejean",
+      desription: "Blue Jean",
+      price: 55.55,
+    },
+  ],
+  orders: [
+    {
+      date: "2005-05-05",
+      subtotal: 150.0,
+      items: [
+        {
+          product: {
+            id: "redshoe",
+            desription: "Red Shoe",
+            price: 42.12,
+          },
+          quantity: 2
+        },
+      ],
+    },
+  ],
+};
 
 const app = express();
 
-app.use('/graphql', graphqlHTTP({
+app.use(
+  "/graphql",
+  graphqlHTTP({
     schema: schema,
     rootValue: root, // GraphQL server will resolve any query of desc/price as the root object.
-    graphiql: true
-}))
+    graphiql: true,
+  })
+);
 
 app.listen(3000, () => {
   console.log(`Running GraphQL server on port 3000`);
